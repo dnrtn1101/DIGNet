@@ -10,15 +10,15 @@ import skimage.io as io
 import json
 
 
-def random_crop(data, target, size):
+def random_crop(data, target, mask, size):
     h, w = data.shape[1:]
-    x = random.randint(0, h - size)
-    y = random.randint(0, w - size)
+    x = random.randint(0, h-size)
+    y = random.randint(0, w-size)
 
     crop_data = data[:, x:x + size, y:y + size]
     crop_target = target[:, x:x + size, y:y + size]
-
-    return crop_data, crop_target
+    crop_mask = mask[:, x:x + size, y:y + size]
+    return crop_data, crop_target, crop_mask
 
 
 def im2tensor(im):
@@ -34,40 +34,42 @@ class Dataset(data.Dataset):
         self.phase = phase
         self.size = size
         self.data_root = data_root
+        self.mask_root = mask_root
 
         self.x_path = sorted(glob.glob(os.path.join(self.data_root, self.phase, '*.png')))
         if self.phase == 'train':
             self.y_path = sorted(glob.glob(os.path.join(self.data_root[:-2], self.phase, '*target', '*.png'))) * 3
         else:
             self.y_path = sorted(glob.glob(os.path.join(self.data_root[:-2], self.phase, '*target', '*.png')))
-        self.X, self.Y = list(), list()
+        self.seg_path = sorted(
+            glob.glob(os.path.join(self.mask_root[:-2], self.phase, '*png')))
+        self.X, self.Y, self.seg = list(), list(), list()
 
-        for x_path, y_path in zip(self.x_path, self.y_path):
+        for x_path, y_path, seg_path in zip(self.x_path, self.y_path, self.seg_path):
             self.X += [io.imread(x_path)]
             self.Y += [io.imread(y_path)]
+            self.seg += [io.imread(seg_path)]
 
     def __getitem__(self, index):
         size = self.size
         phase = self.phase
-        img, target = self.X[index], self.Y[index]
+        img, target, mask = self.X[index], self.Y[index], self.seg[index]
         filename = self.x_path[index].split('/')[-1]
 
         if phase == 'train':
             img = im2tensor(img)
             target = im2tensor(target)
             try:
-                img, target = random_crop(img, target, size=size)
+                img, target, mask = random_crop(img, target, mask,  size=size)
             except KeyError:
                 print('{} data index'.format(str(index)))
                 raise KeyError
-            return img, target
+            return img, target, mask
         else:
             img = im2tensor(img)
             target = im2tensor(target)
-
-            return img, target, filename
+            mask = im2tensor(mask)
+            return img, target, mask, filename
 
     def __len__(self):
         return len(self.x_path)
-
-#

@@ -1,10 +1,13 @@
 import torch
 
 from .dataset import Dataset
-
+from .sft_dataset import sft_Dataset
 
 def generate_loader(phase, opt):
-    dataset = Dataset(phase=phase, data_root=opt.data_root, size=opt.patchsize, level=opt.level)
+    if "sft" in opt.model.lower():
+        dataset = sft_Dataset(phase=phase, data_root=opt.data_root, size=opt.patchsize)
+    else:
+        dataset = Dataset(phase=phase, data_root=opt.data_root, size=opt.patchsize)
 
     kwargs = {
             "batch_size": opt.batchsize if phase == 'train' else 1,
