@@ -16,6 +16,7 @@ def parse_args():
     # dataset
     parser.add_argument('--data_root', type=str, default='')
     parser.add_argument('--mask_root', type=str, default='')
+
     # training setups
     parser.add_argument('--lr', type=float, default=1e-4,
                         help='Learning rate (default:1e-4)')

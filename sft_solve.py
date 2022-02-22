@@ -116,7 +116,7 @@ class Solve():
         for i, inputs in enumerate(valid_loader):
             input_im = inputs[0].to(self.dev)
             clean_im = inputs[1].squeeze(0).cpu().byte().permute(1, 2, 0).numpy().astype(np.uint8)
-            filename = str(inputs[2])[2:-3]
+            filename = str(inputs[3])[2:-3]
             mask = inputs[2].to(self.dev)
             restore_im = self.net(input_im, mask).squeeze(0).clamp(0, 255).round().cpu().byte().permute(1, 2, 0).\
                 numpy().astype(np.uint8)
