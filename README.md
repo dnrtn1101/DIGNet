@@ -1,7 +1,7 @@
 # SDITNet
 
 ### How to train recog_net
-- enter ./recog_net/
+- Enter ./recog_net/
  
 - python main.py --data_root "dataset root" --gpu 0 --num_workers 1 --workers_idx 0 --ckpt_root ./pt/mask_root/ --patchsize 224 --loss mse --max_steps 200000 --num_valimages 50
 
