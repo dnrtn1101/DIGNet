@@ -1,7 +1,7 @@
 import torch
-
 from .dataset import Dataset
 from .sft_dataset import sft_Dataset
+
 
 def generate_loader(phase, opt):
     if "sft" in opt.model.lower():
