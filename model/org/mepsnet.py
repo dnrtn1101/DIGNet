@@ -60,6 +60,7 @@ class Expert(nn.Module):
                  bank, num_templates=16,
                  in_featsize=256, out_featsize=64,
                  num_SRIRs=3, num_SResidualBlocks=12):
+
         super(Expert, self).__init__()
         self.bank = bank
 

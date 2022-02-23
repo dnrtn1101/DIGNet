@@ -6,7 +6,7 @@ import numpy as np
 import skimage.io as io
 from PIL import Image
 import pandas as pd
-import network as unet_aspp
+import model.unet_aspp as unet_aspp
 from data import generate_loader
 import utils
 
