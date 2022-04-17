@@ -1,4 +1,4 @@
-# SDITNet
+# DIGNet
 
 ### How to train recog_net
 - cd ./recog_net
